@@ -10,6 +10,10 @@
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/chentanwan/sheerid-link-extractor/pulls)
 
 **✍️ 作者 陈贪玩 · 📮 Telegram: [@cclchat_bot](https://t.me/cclchat_bot)**
+> Group：**[Join me](https://t.me/KYCTW)**
+>
+> Demo：**[watch here](https://t.me/KYCTWW/33)**
+
 
 > A lightweight **userscript** that automatically detects **SheerID student verification links** (`services.sheerid.com` / `verify.sheerid.com`) appearing on any webpage, and shows them in a popup for **one-click copy or open** — so you can continue your student verification on another device.
 

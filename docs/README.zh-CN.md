@@ -2,7 +2,8 @@
 
 > **自动提取 SheerID 认证链接，跨设备继续学生验证**
 >
-> 作者：**陈贪玩**　Telegram：**[@cclchat_bot](https://t.me/cclchat_bot)**
+> 作者：**陈贪玩**　TG联系：**[@cclchat_bot](https://t.me/cclchat_bot)**
+>                交流群组：**[点我加群](https://t.me/KYCTW)**
 
 ---
 

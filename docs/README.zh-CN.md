@@ -5,6 +5,8 @@
 > 作者：**陈贪玩**　TG联系：**[@cclchat_bot](https://t.me/cclchat_bot)**
 >                
 > 交流群组：**[点我加群](https://t.me/KYCTW)**
+>
+> 操作演示：**[观看视频](https://t.me/KYCTWW/33)**
 
 ---
 

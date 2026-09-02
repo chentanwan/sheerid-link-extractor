@@ -1,8 +1,21 @@
 # 🎓 SheerID Link Extractor
 
+<div align="center">
+
+[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
+[![Version](https://img.shields.io/badge/version-1.0.0-brightgreen.svg)](./SheerID-Link-Extractor.js)
+[![Stars](https://img.shields.io/github/stars/chentanwan/sheerid-link-extractor.svg?style=flat&color=yellow)](https://github.com/chentanwan/sheerid-link-extractor)
+[![Forks](https://img.shields.io/github/forks/chentanwan/sheerid-link-extractor.svg?style=flat&color=orange)](https://github.com/chentanwan/sheerid-link-extractor)
+[![Issues](https://img.shields.io/github/issues/chentanwan/sheerid-link-extractor.svg?style=flat&color=red)](https://github.com/chentanwan/sheerid-link-extractor/issues)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/chentanwan/sheerid-link-extractor/pulls)
+
+**✍️ 作者 陈贪玩 · 📮 Telegram: [@cclchat_bot](https://t.me/cclchat_bot)**
+
 > A lightweight **userscript** that automatically detects **SheerID student verification links** (`services.sheerid.com` / `verify.sheerid.com`) appearing on any webpage, and shows them in a popup for **one-click copy or open** — so you can continue your student verification on another device.
 
-**Author:** 陈贪玩 · Telegram: [@cclchat_bot](https://t.me/cclchat_bot)
+**[🌐 English](README.md) · [🇨🇳 简体中文](docs/README.zh-CN.md)**
+
+</div>
 
 ---
 

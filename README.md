@@ -76,6 +76,12 @@ Any place that can run userscripts works — just install the matching manager (
 3. The script detects the SheerID verification link and shows the popup automatically.
 4. Click **Copy** to move it to another device, or **Open** to continue locally.
 
+<p align="center">
+  <img src="./preview-screenshot.png" alt="SheerID Link Extractor demo" width="360" />
+</p>
+
+> ▶️ Watch the full demo: [`preview.gif`](./preview.gif)
+
 ---
 
 ## ⚙️ How it works

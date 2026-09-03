@@ -1,0 +1,57 @@
+name: Bug report
+description: Report a problem with the SheerID Link Extractor userscript
+title: "[Bug]: "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report! Please provide as much detail as possible.
+  - type: input
+    id: version
+    attributes:
+      label: Script version
+      description: Which version of the userscript are you running?
+      placeholder: e.g. 1.0.0
+    validations:
+      required: true
+  - type: dropdown
+    id: browser
+    attributes:
+      label: Browser / Extension
+      description: What browser and userscript manager are you using?
+      options:
+        - Chrome + Tampermonkey
+        - Chrome + Violentmonkey
+        - Edge + Tampermonkey
+        - Firefox + Tampermonkey
+        - Safari (macOS) + Tampermonkey
+        - iOS / iPadOS + Userscripts
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: url
+    attributes:
+      label: Page URL where the issue occurs
+      description: Which page triggers the problem? (If sensitive, replace personal info with placeholders.)
+      placeholder: e.g. https://chatgpt.com/students/2026/
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Describe the problem you encountered.
+      placeholder: The popup did not appear when ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect?
+      description: Describe what should have happened instead.
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant console output (optional)
+      description: Copy any errors from the browser's developer console (F12).
+      render: shell

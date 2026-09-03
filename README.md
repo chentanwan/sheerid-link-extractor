@@ -2,8 +2,9 @@
 
 <div align="center">
 
+[![CI](https://github.com/chentanwan/sheerid-link-extractor/actions/workflows/ci.yml/badge.svg)](https://github.com/chentanwan/sheerid-link-extractor/actions/workflows/ci.yml)
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
-[![Version](https://img.shields.io/badge/version-1.0.0-brightgreen.svg)](./SheerID-Link-Extractor.js)
+[![Version](https://img.shields.io/badge/version-1.1.0-brightgreen.svg)](./SheerID-Link-Extractor.js)
 [![Stars](https://img.shields.io/github/stars/chentanwan/sheerid-link-extractor.svg?style=flat&color=yellow)](https://github.com/chentanwan/sheerid-link-extractor)
 [![Forks](https://img.shields.io/github/forks/chentanwan/sheerid-link-extractor.svg?style=flat&color=orange)](https://github.com/chentanwan/sheerid-link-extractor)
 [![Issues](https://img.shields.io/github/issues/chentanwan/sheerid-link-extractor.svg?style=flat&color=red)](https://github.com/chentanwan/sheerid-link-extractor/issues)
@@ -111,11 +112,27 @@ The script does not modify or interfere with any third-party service logic. Use 
 
 ```
 sheerid-link-extractor/
-├── SheerID-Link-Extractor.js   # The userscript
-├── README.md                   # This file (EN, overview + install)
-├── docs/README.zh-CN.md        # Detailed Chinese tutorial
-└── COMPLIANCE.md               # Platform-compliance assessment
+├── SheerID-Link-Extractor.js     # The userscript
+├── README.md                     # This file (EN, overview + install)
+├── CONTRIBUTING.md               # Contributor guide
+├── COMPLIANCE.md                 # Platform-compliance assessment
+├── LICENSE                       # MIT License
+├── docs/
+│   └── README.zh-CN.md           # Detailed Chinese tutorial
+├── scripts/
+│   └── validate.js               # CI / local validation script
+├── .github/
+│   ├── workflows/ci.yml          # GitHub Actions CI
+│   ├── ISSUE_TEMPLATE/           # Bug & feature request templates
+│   └── PULL_REQUEST_TEMPLATE.md  # PR template
+└── preview.gif                   # Live demo (privacy-masked)
 ```
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please read the [Contributing Guide](./CONTRIBUTING.md) first, and make sure your change stays within the project's ethical scope (a passive helper for your own verification — no bypass / automation / impersonation).
 
 ---
 
@@ -137,7 +154,10 @@ By design — the UI highlights **Open** on touch/narrow screens and **Copy** on
 Some SheerID offers lock the session to the originating device. If so, note the steps of the partially-filled form and restart the flow on the new device.
 
 **Q: How do I recover a previously captured link?**
-Use the extension menu item "Copy last SheerID link" — the script remembers the most recent one.
+Click the **🕘 History** button on the popup, or use the extension menu "View history" — the script stores up to 20 recent links (deduplicated, newest first).
+
+**Q: How do I clear the saved history?**
+Use the extension menu item "🗑️ Clear history" to wipe the stored links.
 
 ---
 

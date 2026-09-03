@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         SheerID Link Extractor
 // @namespace    https://github.com/sheerid-link-extractor
-// @version      1.0.0
+// @version      1.1.0
 // @description  Automatically monitor SheerID verification links (services.sheerid.com / verify.sheerid.com) appearing on the page, show full link in a popup with one-click copy or open, to continue student verification across devices.
 // @author       陈贪玩 (TG: @cclchat_bot)
 // @match        *://*/*
@@ -63,6 +63,33 @@
 
   // 是否已在当前会话里发现过（防止重复弹窗骚扰）
   var foundSet = Object.create(null);
+
+  // 历史链接本地存储（最近 N 条，带时间戳）——用于找回/复用
+  var HISTORY_KEY = 'sheeridLinkHistory';
+  var HISTORY_MAX = 20; // 保留最近 20 条
+
+  function getHistory() {
+    try {
+      var raw = localStorage.getItem(HISTORY_KEY);
+      var arr = raw ? JSON.parse(raw) : [];
+      return Array.isArray(arr) ? arr : [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  // 追加一条到历史（去重后置顶，超上限截断），返回最新列表
+  function pushHistory(link) {
+    var arr = getHistory();
+    // 去掉已存在的同链接，再置顶
+    arr = arr.filter(function (item) { return item.link !== link; });
+    arr.unshift({ link: link, ts: Date.now() });
+    arr = arr.slice(0, HISTORY_MAX);
+    try {
+      localStorage.setItem(HISTORY_KEY, JSON.stringify(arr));
+    } catch (e) {}
+    return arr;
+  }
 
   /* ============================================================
    * 2. 弹窗 UI
@@ -169,17 +196,113 @@
       window.open(link, '_blank');
     }
 
+    // 打开历史列表弹层
+    function openHistory() {
+      var arr = getHistory();
+      var histWrap = document.createElement('div');
+      histWrap.id = 'sheerid-history-list';
+      histWrap.style.cssText = [
+        'position:fixed',
+        'z-index:1000000',
+        'top:16px',
+        'bottom:16px',
+        'right:16px',
+        'left:16px',
+        'max-width:520px',
+        'margin:0 auto',
+        'background:#111827',
+        'color:#f9fafb',
+        'border-radius:12px',
+        'padding:14px 16px',
+        'box-shadow:0 10px 40px rgba(0,0,0,.5)',
+        'font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif',
+        'border:1px solid #374151',
+        'box-sizing:border-box',
+        'display:flex',
+        'flex-direction:column',
+        'overflow:hidden'
+      ].join(';');
+
+      var hTitle = document.createElement('div');
+      hTitle.textContent = '🕘 SheerID 链接历史（最近 ' + arr.length + ' 条）';
+      hTitle.style.cssText = 'font-weight:700;font-size:15px;margin-bottom:8px;color:#fff';
+
+      var hClose = document.createElement('button');
+      hClose.type = 'button';
+      hClose.textContent = '✕ 关闭';
+      hClose.style.cssText = 'position:absolute;top:12px;right:16px;background:#374151;color:#fff;border:none;border-radius:6px;padding:4px 10px;font-size:12px;cursor:pointer';
+      hClose.addEventListener('click', function () { histWrap.remove(); });
+
+      var hList = document.createElement('div');
+      hList.style.cssText = 'overflow-y:auto;flex:1;min-height:0';
+
+      if (arr.length === 0) {
+        var empty = document.createElement('div');
+        empty.textContent = '暂无历史链接';
+        empty.style.cssText = 'color:#9ca3af;font-size:13px;margin:20px 0;text-align:center';
+        hList.appendChild(empty);
+      } else {
+        arr.forEach(function (item) {
+          var row = document.createElement('div');
+          row.style.cssText = 'display:flex;align-items:center;gap:8px;padding:8px;border-bottom:1px solid #1f2937';
+
+          var time = document.createElement('span');
+          var d = new Date(item.ts);
+          var pad = function (n) { return n < 10 ? '0' + n : '' + n; };
+          time.textContent = pad(d.getHours()) + ':' + pad(d.getMinutes()) + ' ' + pad(d.getMonth() + 1) + '/' + pad(d.getDate());
+          time.style.cssText = 'flex:0 0 auto;font-size:11px;color:#6b7280;width:52px';
+
+          var text = document.createElement('span');
+          text.textContent = item.link;
+          text.style.cssText = 'flex:1;font-family:ui-monospace,Menlo,monospace;font-size:11px;color:#93c5fd;word-break:break-all;max-height:60px;overflow:auto';
+
+          var copyBtn = document.createElement('button');
+          copyBtn.type = 'button';
+          copyBtn.textContent = '复制';
+          copyBtn.style.cssText = 'flex:0 0 auto;background:#2563eb;color:#fff;border:none;border-radius:6px;padding:4px 8px;font-size:11px;cursor:pointer';
+          copyBtn.addEventListener('click', function () {
+            try {
+              if (typeof GM_setClipboard === 'function') GM_setClipboard(item.link);
+              else {
+                var ta = document.createElement('textarea'); ta.value = item.link; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove();
+              }
+              showToast('✅ 已复制');
+            } catch (e) { showToast('❌ 复制失败'); }
+          });
+
+          var openBtn = document.createElement('button');
+          openBtn.type = 'button';
+          openBtn.textContent = '打开';
+          openBtn.style.cssText = 'flex:0 0 auto;background:#374151;color:#fff;border:none;border-radius:6px;padding:4px 8px;font-size:11px;cursor:pointer';
+          openBtn.addEventListener('click', function () { window.open(item.link, '_blank'); });
+
+          row.appendChild(time);
+          row.appendChild(text);
+          row.appendChild(copyBtn);
+          row.appendChild(openBtn);
+          hList.appendChild(row);
+        });
+      }
+
+      histWrap.appendChild(hTitle);
+      histWrap.appendChild(hClose);
+      histWrap.appendChild(hList);
+      document.body.appendChild(histWrap);
+    }
+
     // 是否手机（粗略判断：触摸为主 + 窄屏）
     var isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) ||
                    (window.matchMedia && window.matchMedia('(max-width: 520px)').matches);
 
     var copyBtn = makeBtn('📋 复制', !isMobile, copyLink);
     var openBtn = makeBtn('🌐 打开', isMobile, openLink);
+    var histBtn = makeBtn('🕘 历史', false, openHistory);
     var closeBtn = makeBtn('✕ 关闭', false, function () { wrap.remove(); });
     closeBtn.style.flex = '0 0 auto';
 
     btnRow.appendChild(copyBtn);
     if (isMobile) btnRow.appendChild(openBtn);
+    btnRow.appendChild(histBtn);
     btnRow.appendChild(closeBtn);
 
     wrap.appendChild(title);
@@ -231,11 +354,8 @@
     if (!isSheeridUrl(norm)) return;
     foundSet[norm] = true;
 
-    // 存进 localStorage 最近一条，便于找回
-    try {
-      localStorage.setItem('lastSheeridLink', norm);
-    } catch (e) {}
-
+    // 追加到历史列表（去重后置顶）
+    pushHistory(norm);
     createPopup(norm);
     console.log('[SheerID Extract] 捕获链接:', norm);
   }
@@ -318,13 +438,24 @@
         showToast('🔍 已扫描，若未弹窗说明无新链接');
       });
       GM_registerMenuCommand('📋 复制最近一次 SheerID 链接', function () {
-        var link = localStorage.getItem('lastSheeridLink');
-        if (link) {
-          try { GM_setClipboard(link); } catch (e) {}
+        var arr = getHistory();
+        if (arr.length > 0) {
+          try { GM_setClipboard(arr[0].link); } catch (e) {}
           showToast('✅ 最近链接已复制');
         } else {
           showToast('⚠️ 暂无记录');
         }
+      });
+      GM_registerMenuCommand('🕘 查看历史链接', function () {
+        var arr = getHistory();
+        if (arr.length === 0) { showToast('⚠️ 暂无历史'); return; }
+        // 复用弹窗历史列表：简单起见输出到 console + toast
+        console.log('[SheerID Extract] 历史链接:', arr);
+        showToast('🕘 共 ' + arr.length + ' 条历史（详见控制台）');
+      });
+      GM_registerMenuCommand('🗑️ 清空历史', function () {
+        try { localStorage.removeItem(HISTORY_KEY); } catch (e) {}
+        showToast('🗑️ 历史已清空');
       });
     }
   }

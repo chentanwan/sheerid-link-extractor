@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  validate-script:
+    name: Validate userscript
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # Combined validation: syntax + metadata + large-file guardrail
+      - name: Run validation
+        run: node scripts/validate.js
+
+      # Quick syntax check of the userscript itself (in addition to what validate.js does)
+      - name: Direct syntax check
+        run: node --check SheerID-Link-Extractor.js
+
+      - name: List repository files
+        run: |
+          echo "Files in repo:"
+          git ls-files
